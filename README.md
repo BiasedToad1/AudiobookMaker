@@ -14,10 +14,7 @@ After installing Python, go back to the AudiobookMaker folder and double click R
 ## Linux
 
 Required dependencies: `ffmpeg`
-
-### Install:
 ``` sh
-sudo apt install ffmpeg
 git clone https://github.com/BiasedToad1/AudiobookMaker.git
 cd AudiobookMaker
 ```
