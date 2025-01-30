@@ -24,7 +24,7 @@ git clone https://github.com/BiasedToad1/AudiobookMaker.git
 cd AudiobookMaker
 ```
 
-To start the program run
+To start the program run:
 ``` sh
 ./run.sh
 ```
