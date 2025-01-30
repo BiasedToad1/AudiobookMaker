@@ -1,4 +1,4 @@
-## AudiobookMaker
+# AudiobookMaker
 
 A tool utilizing [piper-tts] (https://github.com/rhasspy/piper) to convert books into audiobooks.
 
@@ -15,7 +15,7 @@ After installing Python, go back to the AudiobookMaker folder and double click R
 
 Required dependencies: `ffmpeg`
 
-# Install:
+### Install:
 ``` sh
 sudo apt install ffmpeg
 git clone https://github.com/BiasedToad1/AudiobookMaker.git
