@@ -1,6 +1,6 @@
 # AudiobookMaker
 
-A tool utilizing [piper-tts] (https://github.com/rhasspy/piper) to convert books into audiobooks.
+A tool utilizing [piper-tts](https://github.com/rhasspy/piper) to convert books into audiobooks.
 
 ## Windows
 
@@ -17,9 +17,5 @@ Required dependencies: `ffmpeg`
 ``` sh
 git clone https://github.com/BiasedToad1/AudiobookMaker.git
 cd AudiobookMaker
-```
-
-To start the program run:
-``` sh
 ./run.sh
 ```
