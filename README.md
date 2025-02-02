@@ -19,3 +19,7 @@ git clone https://github.com/BiasedToad1/AudiobookMaker.git
 cd AudiobookMaker
 ./run.sh
 ```
+## Multiple Files
+
+To make multiple audiobooks at once, copy your text files into the `Multi/` directory, then run the `multi.bat` file for windows or run the `multi.sh` file for Linux.
+The default behavior will be used to create the audiobooks, if you want to change it, open the `unattended.py` file in a text editor and change the parameters at the top of the file.
