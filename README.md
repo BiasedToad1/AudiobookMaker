@@ -26,10 +26,3 @@ cd AudiobookMaker
 ## Multiple Books (Linux Only)
 
 To make multiple audiobooks at once, copy your text files into the 'Multi/' directory, then run the `run.sh` file. If there are multiple files, the audiobooks will go into their own folder in 'completed/'
-``` sh
-nano unattended.py
-```
-
-``` sh
-./multi.sh
-```
