@@ -1,6 +1,12 @@
 # AudiobookMaker
 
-A tool utilizing [piper-tts](https://github.com/rhasspy/piper) to convert books into audiobooks.
+A tool utilizing [piper-tts](https://github.com/rhasspy/piper) to convert books into audiobooks. Also has a page number remover and text splitter built in.
+
+## Voices
+
+To test the included models, go into the 'Models/' directory and test out the included .wav files.
+
+To use other voices including ones for other languages, download a model and config file from [here](https://github.com/rhasspy/piper/blob/master/VOICES.md), and move it into the 'Models/' directory. When using the program, select 'custom' when selecting a model and then type the name of the model out (ex: en_US-amy-medium).
 
 ## Windows
 
@@ -12,14 +18,18 @@ If it is not, you will be taken to the Microsoft Store where you can install Pyt
 After installing Python, go back to the AudiobookMaker folder and double click RUN.bat
 
 ## Linux
-
-Required dependencies: `ffmpeg`
 ``` sh
 git clone https://github.com/BiasedToad1/AudiobookMaker.git
 cd AudiobookMaker
 ./run.sh
 ```
-## Multiple Files
+## Multiple Books (Linux Only)
 
-To make multiple audiobooks at once, copy your text files into the `Multi/` directory, then run the `multi.bat` file for windows or run the `multi.sh` file for Linux.
-The default behavior will be used to create the audiobooks, if you want to change it, open the `unattended.py` file in a text editor and change the parameters at the top of the file.
+To make multiple audiobooks at once, copy your text files into the 'Multi/' directory, then run the `run.sh` file. If there are multiple files, the audiobooks will go into their own folder in 'completed/'
+``` sh
+nano unattended.py
+```
+
+``` sh
+./multi.sh
+```
