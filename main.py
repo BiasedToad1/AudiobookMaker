@@ -143,167 +143,168 @@ def modelChooser():
         else:
             print("Not a Valid Model")
 
-if not (os.path.exists("Multi")): os.system("mkdir Multi")
-if not (os.path.exists("completed")): os.system("mkdir completed")
+if __name__ == "__main__":
+    if not (os.path.exists("Multi")): os.system("mkdir Multi")
+    if not (os.path.exists("completed")): os.system("mkdir completed")
 
-print("\n --- AUDIOBOOK MAKER --- \n      by BiasedToad\n    written in Python\n\n")
+    print("\n --- AUDIOBOOK MAKER --- \n      by BiasedToad\n    written in Python\n\n")
 
-choice = input("Create an Audiobook [1]\nSplit Text Files    [2]\nDelete Page Numbers [3]\n:")
-while not (choice == '1' or choice == '2' or choice == '3'):
-    choice = input(":")
-choice = int(choice)
+    choice = input("Create an Audiobook [1]\nSplit Text Files    [2]\nDelete Page Numbers [3]\n:")
+    while not (choice == '1' or choice == '2' or choice == '3'):
+        choice = input(":")
+    choice = int(choice)
 
-if choice == 1:
-    confirmation = input("Make Multiple Books? [Experimental] (y/N): ")
-    if confirmation == 'y' or confirmation == 'Y':
-        choice = 4
+    if choice == 1:
+        confirmation = input("Make Multiple Books? [Experimental] (y/N): ")
+        if confirmation == 'y' or confirmation == 'Y':
+            choice = 4
 
-if choice == 1: #  Make an Audiobook
+    if choice == 1: #  Make an Audiobook
 
-    confirmation = input("\nCopy Text into 'INPUT_TEXT.txt'\nEnter [Y] when ready: ")
-    while not (confirmation == 'y' or confirmation == 'Y'):
-        confirmation = input("Enter [Y] when ready: ")
-
-    confirmation = input("Delete Page Numbers? (y/N): ")
-    if (confirmation == 'y' or confirmation == 'Y'):
-        removePageNums()
-
-    confirmation = input("Split Audio Files? (y/N): ")
-    if (confirmation == 'y' or confirmation == 'Y'):
-        confirmation = input("Max Text Character Size? (4000 default): ")
-        if confirmation.isdigit():
-            lim = int(confirmation)
-        textDivider()
-    else:
-        with open("INPUT_TEXT.txt", "r") as file:
-            tempLine = file.read()
-        with open("1.txt", "w") as file:
-            file.write(tempLine)
-
-    modelChooser()
-
-    nameConvs = ""
-    if(multipleFiles):
-        confirmation = input("Rename audio files? (y/N): ")
-        if (confirmation == 'y' or confirmation == 'Y'):
-            while True:
-                nameConvs = input("Input Naming Conventions [# will be replaced with ascending numbers]\n(ex: v03c02_#): ")
-                badfilename = False
-                pdsn = False
-                for x in nameConvs:
-                    if x == '#':
-                        if pdsn == True:
-                            print("Can't use more than one '#'")
-                            badfilename = True
-                        pdsn = True
-                    if x == '\\':
-                        badfilename = True
-                if badfilename == True or pdsn == False:
-                    print("Invalid File Name")
-                else:
-                    break
-
-    zeros = False
-    if (nameConvs != "") and (fileCount >= 10):
-        confirmation = input("Put 0s before lower digit numbers? [1, 2... --> 01, 02...] (y/N): ")
-        if (confirmation == 'y' or confirmation == 'Y'):
-            zeros = True
-
-    start = time.perf_counter()
-
-    if sys.platform == "win32":
-        for i in range(1, int(fileCount + 1)):
-            os.system("type " + str(i) + ".txt | .\\piperw\\piper.exe -m Models/" + model + ".onnx -f " + str(i) + ".wav")
-            os.system("erase " + str(i) + ".txt")
-            if nameConvs != "":
-                os.system("move " + str(i) + ".wav completed/" + nameConvs.replace("#", str(renamerZeros(fileCount, i, zeros))) + ".wav")
-            else:
-                os.system("move " + str(i) + ".wav completed/")
-
-    elif sys.platform == "linux":
-        for i in range(1, int(fileCount + 1)):
-            os.system("cat " + str(i) + ".txt | ./piper/piper -m Models/" + model + ".onnx -f " + str(i) + ".wav")
-            o = str(i) + ".txt"
-            try:
-                os.remove(o)
-            except FileNotFoundError:
-                pass
-            if nameConvs != "":
-                os.system("mv " + str(i) + ".wav completed/" + nameConvs.replace("#", str(renamerZeros(fileCount, i, zeros))) + ".wav")
-            else:
-                os.system("mv " + str(i) + ".wav completed/")
-
-    end = time.perf_counter()
-    time = int(end - start)
-    secs = time % 60
-    mins = int(time / 60) % 60
-    hours = int((time / 60) / 60) % 60
-
-    print(f"\nProgram complete in {hours:02}:{mins:02}:{secs:02}, New audiobook files moved to ./completed/\n")
-
-elif choice == 2: # Split Text Files
-
-    confirmation = input("Max Text Character Size? (4000 default): ")
-    if confirmation.isdigit():
-        lim = int(confirmation)
-    textDivider()
-
-elif choice == 3:
-
-    removePageNums()
-
-elif choice == 4:
-
-    pgNumBool = False
-    splitTextBool = False
-
-
-    confirmation = input("\nCopy Files into 'Multi/'\nEnter [Y] when ready: ")
-    while not (confirmation == 'y' or confirmation == 'Y'):
-        confirmation = input("Enter [Y] when ready: ")
-
-    confirmation = input("Use Default Audiobook Properties? (Y/n): ")
-    if (confirmation == 'n' or confirmation == 'N'):
+        confirmation = input("\nCopy Text into 'INPUT_TEXT.txt'\nEnter [Y] when ready: ")
+        while not (confirmation == 'y' or confirmation == 'Y'):
+            confirmation = input("Enter [Y] when ready: ")
 
         confirmation = input("Delete Page Numbers? (y/N): ")
         if (confirmation == 'y' or confirmation == 'Y'):
-            pgNumBool = True
+            removePageNums()
 
         confirmation = input("Split Audio Files? (y/N): ")
         if (confirmation == 'y' or confirmation == 'Y'):
             confirmation = input("Max Text Character Size? (4000 default): ")
             if confirmation.isdigit():
                 lim = int(confirmation)
-            splitTextBool = True
+            textDivider()
+        else:
+            with open("INPUT_TEXT.txt", "r") as file:
+                tempLine = file.read()
+            with open("1.txt", "w") as file:
+                file.write(tempLine)
 
-    modelChooser()
+        modelChooser()
 
-    start = time.perf_counter()
+        nameConvs = ""
+        if(multipleFiles):
+            confirmation = input("Rename audio files? (y/N): ")
+            if (confirmation == 'y' or confirmation == 'Y'):
+                while True:
+                    nameConvs = input("Input Naming Conventions [# will be replaced with ascending numbers]\n(ex: v03c02_#): ")
+                    badfilename = False
+                    usedHashtag = False
+                    for x in nameConvs:
+                        if x == '#':
+                            if usedHashtag == True:
+                                print("Can't use more than one '#'")
+                                badfilename = True
+                            usedHashtag = True
+                        if x == '\\':
+                            badfilename = True
+                    if badfilename == True or usedHashtag == False:
+                        print("Invalid File Name")
+                    else:
+                        break
 
-    os.system("ls -1 Multi/ > files.txt")
-    with open('files.txt', 'r') as file:
-        for line in file:
-            os.system("cat Multi/" + line.strip() + " > INPUT_TEXT.txt")
-            if pgNumBool == True:
-                removePageNums()
-            if splitTextBool == True:
-                textDivider()
-            else:
-                os.system("INPUT_TEXT.txt > 1.txt")
-            os.system("mkdir completed/" + line.strip())
+        zeros = False
+        if (nameConvs != "") and (fileCount >= 10):
+            confirmation = input("Put 0s before lower digit numbers? [1, 2... --> 01, 02...] (y/N): ")
+            if (confirmation == 'y' or confirmation == 'Y'):
+                zeros = True
+
+        start = time.perf_counter()
+
+        if sys.platform == "win32":
             for i in range(1, int(fileCount + 1)):
-                os.system("cat " + str(i) + ".txt | ./piper/piper -m Models/" + model + ".onnx -f completed/" + line.strip() + "/" + str(i) + ".wav")
+                os.system("type " + str(i) + ".txt | .\\piperw\\piper.exe -m Models/" + model + ".onnx -f " + str(i) + ".wav")
+                os.system("erase " + str(i) + ".txt")
+                if nameConvs != "":
+                    os.system("move " + str(i) + ".wav completed/" + nameConvs.replace("#", str(renamerZeros(fileCount, i, zeros))) + ".wav")
+                else:
+                    os.system("move " + str(i) + ".wav completed/")
+
+        elif sys.platform == "linux":
+            for i in range(1, int(fileCount + 1)):
+                os.system("cat " + str(i) + ".txt | ./piper/piper -m Models/" + model + ".onnx -f " + str(i) + ".wav")
                 o = str(i) + ".txt"
                 try:
                     os.remove(o)
                 except FileNotFoundError:
                     pass
-    os.remove("files.txt")
+                if nameConvs != "":
+                    os.system("mv " + str(i) + ".wav completed/" + nameConvs.replace("#", str(renamerZeros(fileCount, i, zeros))) + ".wav")
+                else:
+                    os.system("mv " + str(i) + ".wav completed/")
 
-    end = time.perf_counter()
-    time = int(end - start)
-    secs = time % 60
-    mins = int(time / 60) % 60
-    hours = int((time / 60) / 60) % 60
+        end = time.perf_counter()
+        time = int(end - start)
+        secs = time % 60
+        mins = int(time / 60) % 60
+        hours = int((time / 60) / 60) % 60
 
-    print(f"\nProgram complete in {hours:02}:{mins:02}:{secs:02}, New audiobooks moved to ./completed/\n")
+        print(f"\nProgram complete in {hours:02}:{mins:02}:{secs:02}, New audiobook files moved to ./completed/\n")
+
+    elif choice == 2: # Split Text Files
+
+        confirmation = input("Max Text Character Size? (4000 default): ")
+        if confirmation.isdigit():
+            lim = int(confirmation)
+        textDivider()
+
+    elif choice == 3:
+
+        removePageNums()
+
+    elif choice == 4:
+
+        pgNumBool = False
+        splitTextBool = False
+
+
+        confirmation = input("\nCopy Files into 'Multi/'\nEnter [Y] when ready: ")
+        while not (confirmation == 'y' or confirmation == 'Y'):
+            confirmation = input("Enter [Y] when ready: ")
+
+        confirmation = input("Use Default Audiobook Properties? (Y/n): ")
+        if (confirmation == 'n' or confirmation == 'N'):
+
+            confirmation = input("Delete Page Numbers? (y/N): ")
+            if (confirmation == 'y' or confirmation == 'Y'):
+                pgNumBool = True
+
+            confirmation = input("Split Audio Files? (y/N): ")
+            if (confirmation == 'y' or confirmation == 'Y'):
+                confirmation = input("Max Text Character Size? (4000 default): ")
+                if confirmation.isdigit():
+                    lim = int(confirmation)
+                splitTextBool = True
+
+        modelChooser()
+
+        start = time.perf_counter()
+
+        os.system("ls -1 Multi/ > files.txt")
+        with open('files.txt', 'r') as file:
+            for line in file:
+                os.system("cat Multi/" + line.strip() + " > INPUT_TEXT.txt")
+                if pgNumBool == True:
+                    removePageNums()
+                if splitTextBool == True:
+                    textDivider()
+                else:
+                    os.system("INPUT_TEXT.txt > 1.txt")
+                os.system("mkdir completed/" + line.strip())
+                for i in range(1, int(fileCount + 1)):
+                    os.system("cat " + str(i) + ".txt | ./piper/piper -m Models/" + model + ".onnx -f completed/" + line.strip() + "/" + str(i) + ".wav")
+                    o = str(i) + ".txt"
+                    try:
+                        os.remove(o)
+                    except FileNotFoundError:
+                        pass
+        os.remove("files.txt")
+
+        end = time.perf_counter()
+        time = int(end - start)
+        secs = time % 60
+        mins = int(time / 60) % 60
+        hours = int((time / 60) / 60) % 60
+
+        print(f"\nProgram complete in {hours:02}:{mins:02}:{secs:02}, New audiobooks moved to ./completed/\n")
