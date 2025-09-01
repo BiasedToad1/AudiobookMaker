@@ -5,7 +5,7 @@ import time
 model = ""
 lim = 4000  # char limit
 fileCount = 1
-multipleFiles = False
+multipleFiles = False 
 
 def removePageNums():
     tempLine = ""
@@ -106,10 +106,48 @@ def renamerZeros(files, num, zeros): # used to determine if and how many zeros s
     else:
         return num
 
+def modelDownloader():
+    voices = {"amy","arctic","bryce","danny","hfc_female","hfc_male","joe","john","kathleen","kristin","kusal","l2arctic","lessac","libritts","ljspeech","norman","reza_ibrahim","ryan","sam"}
+    while True:
+        modelChoice = input(f"Choose a voice model to download\n{voices}\n:")
+        if modelChoice in voices:
+            while True:
+                qualityChoice = input("Select a quality option [low/medium/high]\n:")
+                if qualityChoice == "low" or qualityChoice == "medium" or qualityChoice == "high":
+                    os.system(f"wget https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/{modelChoice}/{qualityChoice}/en_US-{modelChoice}-{qualityChoice}.onnx && mv en_US-{modelChoice}-{qualityChoice}.onnx models/en_US-{modelChoice}-{qualityChoice}.onnx")
+                    os.system(f"wget https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/{modelChoice}/{qualityChoice}/en_US-{modelChoice}-{qualityChoice}.onnx.json && mv en_US-{modelChoice}-{qualityChoice}.onnx.json models/en_US-{modelChoice}-{qualityChoice}.onnx.json")
+                    if not (os.path.exists(f"models/en_US-{modelChoice}-{qualityChoice}.onnx")): print("Failed to download, quality option not available")
+                    break
+                else:
+                    print("Quality option not available")
+            break
+
 def modelChooser():
     global model
+    numFiles = 0
+    while numFiles == 0:
+        lst = os.listdir("models/")
+        numFiles = len(lst)
+        if(numFiles == 0):
+            print("You currently have no models downloaded")
+            modelDownloader()
+
+    print(f"{int(numFiles / 2)} voice models detected.\nUse Downloaded Voice Model [1]\nDownload a New Voice Model [2]")
     while True:
-        confirmation = input("Select a Voice Model [You can test out each voice in the 'Models/' directory]\n(a/d/hf/hm/k/custom): ")
+        choice = input(":")
+        try:
+            if int(choice) == 1:
+                break
+            elif int(choice) == 2:
+                modelDownloader()
+            else:
+                print("Not a valid choice.")
+        except ValueError: 
+            print("Not a valid choice.")
+
+
+    while True:
+        confirmation = input("Select a Voice Model (amy/d/hf/hm/k/custom): ")
         if confirmation == 'a' or confirmation == 'amy':
             model = "en_US-amy-medium"
             break
@@ -126,9 +164,9 @@ def modelChooser():
             model = "en_US-kristin-medium"
             break
         elif confirmation == 'custom':
-            usrmodel = input("Enter the name of the Model in the 'Models/' folder (ex: en_US-hfc_female-medium): ")
-            if os.path.isfile(f"Models/{usrmodel}.onnx"):
-                if os.path.isfile(f"Models/{usrmodel}.onnx.json"):
+            usrmodel = input("Enter the name of the Model in the 'models/' folder (ex: en_US-hfc_female-medium): ")
+            if os.path.isfile(f"models/{usrmodel}.onnx"):
+                if os.path.isfile(f"models/{usrmodel}.onnx.json"):
                     model = usrmodel
                     print(f"Using custom user model: {usrmodel}")
                     break
@@ -136,7 +174,7 @@ def modelChooser():
                     print("Missing .json file")
             else:
                 print("Not a valid .ONNX file")
-        elif os.path.isfile(f"Models/{confirmation}.onnx") and os.path.isfile(f"Models/{confirmation}.onnx.json"):
+        elif os.path.isfile(f"models/{confirmation}.onnx") and os.path.isfile(f"models/{confirmation}.onnx.json"):
             model = confirmation
             print(f"Using custom user model: {confirmation}")
             break
@@ -144,7 +182,8 @@ def modelChooser():
             print("Not a Valid Model")
 
 if __name__ == "__main__":
-    if not (os.path.exists("Multi")): os.system("mkdir Multi")
+    if not (os.path.exists("multi")): os.system("mkdir multi")
+    if not (os.path.exists("models")): os.system("mkdir models")
     if not (os.path.exists("completed")): os.system("mkdir completed")
 
     print("\n --- AUDIOBOOK MAKER --- \n      by BiasedToad\n    written in Python\n\n")
@@ -212,27 +251,17 @@ if __name__ == "__main__":
 
         start = time.perf_counter()
 
-        if sys.platform == "win32":
-            for i in range(1, int(fileCount + 1)):
-                os.system("type " + str(i) + ".txt | .\\piperw\\piper.exe -m Models/" + model + ".onnx -f " + str(i) + ".wav")
-                os.system("erase " + str(i) + ".txt")
-                if nameConvs != "":
-                    os.system("move " + str(i) + ".wav completed/" + nameConvs.replace("#", str(renamerZeros(fileCount, i, zeros))) + ".wav")
-                else:
-                    os.system("move " + str(i) + ".wav completed/")
-
-        elif sys.platform == "linux":
-            for i in range(1, int(fileCount + 1)):
-                os.system("cat " + str(i) + ".txt | ./piper/piper -m Models/" + model + ".onnx -f " + str(i) + ".wav")
-                o = str(i) + ".txt"
-                try:
-                    os.remove(o)
-                except FileNotFoundError:
-                    pass
-                if nameConvs != "":
-                    os.system("mv " + str(i) + ".wav completed/" + nameConvs.replace("#", str(renamerZeros(fileCount, i, zeros))) + ".wav")
-                else:
-                    os.system("mv " + str(i) + ".wav completed/")
+        for i in range(1, int(fileCount + 1)):
+            os.system("cat " + str(i) + ".txt | ./piper/piper -m models/" + model + ".onnx -f " + str(i) + ".wav")
+            o = str(i) + ".txt"
+            try:
+                os.remove(o)
+            except FileNotFoundError:
+                pass
+            if nameConvs != "":
+                os.system("mv " + str(i) + ".wav completed/" + nameConvs.replace("#", str(renamerZeros(fileCount, i, zeros))) + ".wav")
+            else:
+                os.system("mv " + str(i) + ".wav completed/")
 
         end = time.perf_counter()
         time = int(end - start)
@@ -259,7 +288,7 @@ if __name__ == "__main__":
         splitTextBool = False
 
 
-        confirmation = input("\nCopy Files into 'Multi/'\nEnter [Y] when ready: ")
+        confirmation = input("\nCopy Files into 'multi/'\nEnter [Y] when ready: ")
         while not (confirmation == 'y' or confirmation == 'Y'):
             confirmation = input("Enter [Y] when ready: ")
 
@@ -280,25 +309,26 @@ if __name__ == "__main__":
         modelChooser()
 
         start = time.perf_counter()
-
-        os.system("ls -1 Multi/ > files.txt")
+        os.system("ls -1 multi/ > files.txt")
         with open('files.txt', 'r') as file:
             for line in file:
-                os.system("cat Multi/" + line.strip() + " > INPUT_TEXT.txt")
+                os.system("cat multi/" + line.strip() + " > INPUT_TEXT.txt")
                 if pgNumBool == True:
                     removePageNums()
                 if splitTextBool == True:
                     textDivider()
                 else:
-                    os.system("INPUT_TEXT.txt > 1.txt")
+                    os.system("cat INPUT_TEXT.txt > 1.txt")
+
                 os.system("mkdir completed/" + line.strip())
                 for i in range(1, int(fileCount + 1)):
-                    os.system("cat " + str(i) + ".txt | ./piper/piper -m Models/" + model + ".onnx -f completed/" + line.strip() + "/" + str(i) + ".wav")
+                    os.system("cat " + str(i) + ".txt | ./piper/piper -m models/" + model + ".onnx -f completed/" + line.strip() + "/" + str(i) + ".wav")
                     o = str(i) + ".txt"
                     try:
                         os.remove(o)
                     except FileNotFoundError:
                         pass
+
         os.remove("files.txt")
 
         end = time.perf_counter()

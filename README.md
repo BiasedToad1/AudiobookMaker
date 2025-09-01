@@ -4,11 +4,26 @@ A tool utilizing [piper-tts](https://github.com/rhasspy/piper) to convert books 
 
 ## Voices
 
-To test the included models, go into the 'Models/' directory and test out the included .wav files.
+To test different voice models, use [this website](https://rhasspy.github.io/piper-samples/).
 
-To use other voices including ones for other languages, download a model and config file from [here](https://github.com/rhasspy/piper/blob/master/VOICES.md), and move it into the 'Models/' directory. When using the program, select 'custom' when selecting a model and then type the name of the model out (ex: en_US-amy-medium).
+To use other voices including ones for other languages, download a model and config file from [here](https://github.com/rhasspy/piper/blob/master/VOICES.md), and move it into the 'models/' directory. When using the program, select 'custom' when selecting a model and then type the name of the model out (ex: en_US-amy-medium).
+
+## Linux
+Requirements
+``` sh
+wget python
+```
+In a terminal, run these commands to install AudiobookMaker:
+``` sh
+git clone https://github.com/BiasedToad1/AudiobookMaker.git
+cd AudiobookMaker
+./run.sh
+```
 
 ## Windows
+
+> [!WARNING]
+> Windows support has been dropped. Please use the latest windows release for last working version
 
 This program utilizes Python, if you do not have python installed the program won't run.
 
@@ -17,12 +32,6 @@ If it is not, you will be taken to the Microsoft Store where you can install Pyt
 
 After installing Python, install the [latest windows release](https://github.com/BiasedToad1/AudiobookMaker/releases/download/tts/AudiobookMakerWindows.zip), unzip it, double click RUN.bat
 
-## Linux
-``` sh
-git clone https://github.com/BiasedToad1/AudiobookMaker.git
-cd AudiobookMaker
-./run.sh
-```
 ## Multiple Books (Linux Only)
 
 To make multiple audiobooks at once, copy your text files into the 'Multi/' directory, then run the `run.sh` file. If there are multiple files, the audiobooks will go into their own folder in 'completed/'
