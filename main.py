@@ -122,64 +122,43 @@ def modelDownloader():
                     print("Quality option not available")
             break
 
+def modelIndex():
+    lst = os.listdir("models/")
+    if not lst:
+        return 0
+    for x in lst:
+        if not x.endswith(".onnx"):
+            lst.remove(x)
+    for x in range(len(lst)):
+        lst[x] = lst[x].replace("en_US-", "")
+        lst[x] = lst[x].replace(".onnx", "")
+    for x in lst:
+        if x.endswith(".json"):
+            lst.remove(x)
+    return lst
+
 def modelChooser():
     global model
-    numFiles = 0
-    while numFiles == 0:
-        lst = os.listdir("models/")
-        numFiles = len(lst)
-        if(numFiles == 0):
-            print("You currently have no models downloaded")
-            modelDownloader()
+    while modelIndex() == 0:
+        print("You currently have no models downloaded")
+        modelDownloader()
 
-    print(f"{int(numFiles / 2)} voice models detected.\nUse Downloaded Voice Model [1]\nDownload a New Voice Model [2]")
+    
+    print(f"{modelIndex()} voice models detected.\nEnter model name to use or enter \'DOWNLOAD\' to download a new model.")
     while True:
         choice = input(":")
         try:
-            if int(choice) == 1:
+            if choice in modelIndex():
+                model = f"en_US-{choice}"
                 break
-            elif int(choice) == 2:
+            elif choice == "DOWNLOAD":
                 modelDownloader()
+                print(f"{modelIndex()} voice models detected.\nEnter model name to use or enter \'DOWNLOAD\' to download a new model.")
+                continue
             else:
                 print("Not a valid choice.")
         except ValueError: 
             print("Not a valid choice.")
-
-
-    while True:
-        confirmation = input("Select a Voice Model (amy/d/hf/hm/k/custom): ")
-        if confirmation == 'a' or confirmation == 'amy':
-            model = "en_US-amy-medium"
-            break
-        elif confirmation == 'd' or confirmation == 'danny':
-            model = "en_US-danny-low"
-            break
-        elif confirmation == 'hf' or confirmation == 'hfc_female':
-            model = "en_US-hfc_female-medium"
-            break
-        elif confirmation == 'hm' or confirmation == 'hfc_male':
-            model = "en_US-hfc_male-medium"
-            break
-        elif confirmation == 'k' or confirmation == 'kristin':
-            model = "en_US-kristin-medium"
-            break
-        elif confirmation == 'custom':
-            usrmodel = input("Enter the name of the Model in the 'models/' folder (ex: en_US-hfc_female-medium): ")
-            if os.path.isfile(f"models/{usrmodel}.onnx"):
-                if os.path.isfile(f"models/{usrmodel}.onnx.json"):
-                    model = usrmodel
-                    print(f"Using custom user model: {usrmodel}")
-                    break
-                else:
-                    print("Missing .json file")
-            else:
-                print("Not a valid .ONNX file")
-        elif os.path.isfile(f"models/{confirmation}.onnx") and os.path.isfile(f"models/{confirmation}.onnx.json"):
-            model = confirmation
-            print(f"Using custom user model: {confirmation}")
-            break
-        else:
-            print("Not a Valid Model")
 
 if __name__ == "__main__":
     if not (os.path.exists("multi")): os.system("mkdir multi")
