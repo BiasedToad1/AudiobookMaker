@@ -1,6 +1,8 @@
 import os
 import sys
 import time
+import wave
+from piper import PiperVoice
 
 model = ""
 lim = 4000  # char limit
@@ -161,9 +163,9 @@ def modelChooser():
             print("Not a valid choice.")
 
 if __name__ == "__main__":
-    if not (os.path.exists("multi")): os.system("mkdir multi")
-    if not (os.path.exists("models")): os.system("mkdir models")
-    if not (os.path.exists("completed")): os.system("mkdir completed")
+    if not (os.path.exists("multi")): os.mkdir("multi")
+    if not (os.path.exists("models")): os.mkdir("models")
+    if not (os.path.exists("completed")): os.mkdir("completed")
 
     print("\n --- AUDIOBOOK MAKER --- \n      by BiasedToad\n    written in Python\n\n")
 
@@ -231,8 +233,13 @@ if __name__ == "__main__":
         start = time.perf_counter()
 
         for i in range(1, int(fileCount + 1)):
-            os.system("cat " + str(i) + ".txt | ./piper/piper -m models/" + model + ".onnx -f " + str(i) + ".wav")
+            # os.system("cat " + str(i) + ".txt | ./piper/piper -m models/" + model + ".onnx -f " + str(i) + ".wav")
             o = str(i) + ".txt"
+            voice = PiperVoice.load("models/" + model + ".onnx")
+            with open(str(i) + ".txt", "r") as txt:
+                with wave.open(str(i) + ".wav", "wb") as wav_file:
+                    voice.synthesize_wav(txt.read(), wav_file)
+                        
             try:
                 os.remove(o)
             except FileNotFoundError:
@@ -301,7 +308,11 @@ if __name__ == "__main__":
 
                 os.system("mkdir completed/" + line.strip())
                 for i in range(1, int(fileCount + 1)):
-                    os.system("cat " + str(i) + ".txt | ./piper/piper -m models/" + model + ".onnx -f completed/" + line.strip() + "/" + str(i) + ".wav")
+                    # os.system("cat " + str(i) + ".txt | ./piper/piper -m models/" + model + ".onnx -f completed/" + line.strip() + "/" + str(i) + ".wav")
+                    voice = PiperVoice.load("models/" + model + ".onnx")
+                    with open(str(i) + ".txt", "r") as txt:
+                        with wave.open("completed/" + line.strip() + "/" + str(i) + ".wav", "wb") as wav_file:
+                            voice.synthesize_wav(txt.read(), wav_file)
                     o = str(i) + ".txt"
                     try:
                         os.remove(o)

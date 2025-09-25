@@ -10,13 +10,19 @@ To use other voices including ones for other languages, download a model and con
 
 ## Linux
 Requirements
-``` sh
-wget python
+```
+python, wget
 ```
 In a terminal, run these commands to install AudiobookMaker:
 ``` sh
 git clone https://github.com/BiasedToad1/AudiobookMaker.git
 cd AudiobookMaker
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+Run using:
+```sh
 ./run.sh
 ```
 
