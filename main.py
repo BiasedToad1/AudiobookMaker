@@ -116,10 +116,13 @@ def modelDownloader():
             while True:
                 qualityChoice = input("Select a quality option [low/medium/high]\n:")
                 if qualityChoice == "low" or qualityChoice == "medium" or qualityChoice == "high":
-                    os.system(f"wget https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/{modelChoice}/{qualityChoice}/en_US-{modelChoice}-{qualityChoice}.onnx && mv en_US-{modelChoice}-{qualityChoice}.onnx models/en_US-{modelChoice}-{qualityChoice}.onnx")
-                    os.system(f"wget https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/{modelChoice}/{qualityChoice}/en_US-{modelChoice}-{qualityChoice}.onnx.json && mv en_US-{modelChoice}-{qualityChoice}.onnx.json models/en_US-{modelChoice}-{qualityChoice}.onnx.json")
-                    if not (os.path.exists(f"models/en_US-{modelChoice}-{qualityChoice}.onnx")): print("Failed to download, quality option not available")
-                    break
+                    os.system(f"python3 -m piper.download_voices en_US-{modelChoice}-{qualityChoice}")
+                    if(os.path.exists(f"en_US-{modelChoice}-{qualityChoice}.onnx")):
+                        os.rename(f"en_US-{modelChoice}-{qualityChoice}.onnx", f"models/en_US-{modelChoice}-{qualityChoice}.onnx")
+                        os.rename(f"en_US-{modelChoice}-{qualityChoice}.onnx.json", f"models/en_US-{modelChoice}-{qualityChoice}.onnx.json")
+                        break
+                    else:
+                        print("Failed to download, quality option not available")
                 else:
                     print("Quality option not available")
             break
@@ -233,7 +236,6 @@ if __name__ == "__main__":
         start = time.perf_counter()
 
         for i in range(1, int(fileCount + 1)):
-            # os.system("cat " + str(i) + ".txt | ./piper/piper -m models/" + model + ".onnx -f " + str(i) + ".wav")
             o = str(i) + ".txt"
             voice = PiperVoice.load("models/" + model + ".onnx")
             with open(str(i) + ".txt", "r") as txt:
@@ -245,9 +247,9 @@ if __name__ == "__main__":
             except FileNotFoundError:
                 pass
             if nameConvs != "":
-                os.system("mv " + str(i) + ".wav completed/" + nameConvs.replace("#", str(renamerZeros(fileCount, i, zeros))) + ".wav")
+                os.rename(f"{str(i)}.wav", f"completed/{nameConvs.replace("#", str(renamerZeros(fileCount, i, zeros)))}.wav")
             else:
-                os.system("mv " + str(i) + ".wav completed/")
+                os.rename(f"{str(i)}.wav", f"completed/{str(i)}.wav")
 
         end = time.perf_counter()
         time = int(end - start)
@@ -306,9 +308,8 @@ if __name__ == "__main__":
                 else:
                     os.system("cat INPUT_TEXT.txt > 1.txt")
 
-                os.system("mkdir completed/" + line.strip())
+                os.mkdir("completed/" + line.strip())
                 for i in range(1, int(fileCount + 1)):
-                    # os.system("cat " + str(i) + ".txt | ./piper/piper -m models/" + model + ".onnx -f completed/" + line.strip() + "/" + str(i) + ".wav")
                     voice = PiperVoice.load("models/" + model + ".onnx")
                     with open(str(i) + ".txt", "r") as txt:
                         with wave.open("completed/" + line.strip() + "/" + str(i) + ".wav", "wb") as wav_file:
