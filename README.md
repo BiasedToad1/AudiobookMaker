@@ -11,7 +11,7 @@ To use other voices including ones for other languages, download a model and con
 ## Linux
 Requirements
 ```
-python, wget
+python
 ```
 In a terminal, run these commands to install AudiobookMaker:
 ``` sh
