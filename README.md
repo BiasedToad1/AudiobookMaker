@@ -2,6 +2,9 @@
 
 A tool utilizing [piper-tts](https://github.com/rhasspy/piper) to convert books into audiobooks. Also has a page number remover and text splitter built in.
 
+> [!WARNING]
+> The rest of this documentation is old and outdated, I will get to fixing it at some point.
+
 ## Voices
 
 To test different voice models, use [this website](https://rhasspy.github.io/piper-samples/).
