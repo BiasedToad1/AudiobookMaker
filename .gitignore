@@ -1,4 +1,5 @@
 .venv
-multi
-completed
-models
+dist/
+build/
+app/usr/
+AudiobookMaker.spec
